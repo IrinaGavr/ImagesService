@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use yii\web\UploadedFile;
 use Yii;
 
 /**
@@ -13,36 +14,35 @@ use Yii;
  * @property string $model_id
  * @property string $desc
  */
-class Upload extends \yii\db\ActiveRecord
-{
+class Upload extends \yii\db\ActiveRecord {
+
+    public $file;
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'upload';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id', 'path', 'model_name', 'model_id', 'desc'], 'required'],
-            [['id'], 'integer'],
-            [['desc'], 'string'],
-            [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
-            [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']],
-            [['id'], 'unique'],
+                [['id', 'path', 'model_name', 'model_id', 'desc'], 'required'],
+                [['id'], 'integer'],
+                [['desc'], 'string'],
+                [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
+                [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']],
+                [['id'], 'unique'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'path' => 'Path',
@@ -51,9 +51,24 @@ class Upload extends \yii\db\ActiveRecord
             'desc' => 'Desc',
         ];
     }
-    
-    
-    public function saveImages(){
-        
+
+    public function saveFile($path, $model_name, $model_id, $desc) {
+
+        $save = new self;
+        $save->path = $path;
+        $save->model_name = $model_name;
+        $save->model_id = $model_id;
+        $save->desc = $desc;
+        return $save->save();
     }
+
+    public function upload() {
+        if ($this->validate()) {
+            $this->file->saveAs('/web/uploads/' . $this->file->baseName . '.' . $this->file->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
