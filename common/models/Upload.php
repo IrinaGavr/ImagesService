@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use yii\web\UploadedFile;
+//use yii\web\UploadedFile;
 use Yii;
 
 /**
@@ -52,23 +52,27 @@ class Upload extends \yii\db\ActiveRecord {
         ];
     }
 
-    public function saveFile($path, $model_name, $model_id, $desc) {
-
-        $save = new self;
-        $save->path = $path;
-        $save->model_name = $model_name;
-        $save->model_id = $model_id;
-        $save->desc = $desc;
-        return $save->save();
+    public function beforeSave($insert) {
+        $this->path = md5(time() . $this->model_name . $this->model_id . $this->file->baseName) . '.' . $this->file->extension;
+        return parent::beforeSave($insert);
     }
 
-    public function upload() {
-        if ($this->validate()) {
-            $this->file->saveAs('/web/uploads/' . $this->file->baseName . '.' . $this->file->extension);
-            return true;
-        } else {
-            return false;
+    public function afterSave($insert, $changedAttributes) {
+        parent::afterSave($insert, $changedAttributes);
+        if (!$this->upload()) {
+            $this->delete();
         }
     }
+
+    public static function getFullPath($path) {
+        return \Yii::getAlias('@frontend/web/uploads/') . $path;
+    }
+
+//    public function upload() {
+//        return [          
+//        $this->file->saveAs(self::getFullPath($this->path))
+//        ];
+//    }
+
 
 }

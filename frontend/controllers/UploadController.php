@@ -119,17 +119,19 @@ class UploadController extends Controller {
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionUpload() {
+    public function actionUpload() {      
         $model = new Upload();
 
         if (Yii::$app->request->isPost) {
             $model->file = UploadedFile::getInstance($model, 'file');
-            if ($model->upload()) {
-                return;
-            }
-        }
+                        
+            return var_dump($model->save());
+        }        
+        
 
         return $this->render('upload', ['model' => $model]);
     }
+    
+   
 
 }
