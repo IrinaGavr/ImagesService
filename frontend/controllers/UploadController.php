@@ -67,7 +67,7 @@ class UploadController extends Controller {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
+        return $this->render('upload', [
                     'model' => $model,
         ]);
     }
@@ -190,8 +190,12 @@ class UploadController extends Controller {
     }
     
     public function actionGet(){
-        $model = new Upload();
-        return $model->getById();
+        $models = new Upload();
+        echo '<pre>';
+        var_dump($models);
+        echo '</pre>';
+        return $models->getById();
+        
     }
 
 }
