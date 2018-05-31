@@ -189,6 +189,9 @@ class UploadController extends Controller {
         return 'false';
     }
     
-    
+    public function actionGet(){
+        $model = new Upload();
+        return $model->getById();
+    }
 
 }

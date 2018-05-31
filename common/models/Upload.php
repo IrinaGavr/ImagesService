@@ -67,8 +67,12 @@ class Upload extends \yii\db\ActiveRecord {
     }
 
     public function upload() {
-        return $this->file->saveAs(self::getFullPath ($this->path));
+        return $this->file->saveAs(self::getFullPath($this->path));
     }
 
-    
+    public function getById() {
+
+
+    }
+
 }
