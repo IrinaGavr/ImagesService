@@ -30,13 +30,16 @@ class Upload extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-                [['id', 'path', 'model_name', 'model_id', 'desc'], 'required'],
-                [['id'], 'integer'],
+                [['model_name', 'model_id'], 'required'],
                 [['desc'], 'string'],
                 [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
-                [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']],
-                [['id'], 'unique'],
+                [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']]
         ];
+    }
+
+    public function beforeSave($insert) {
+        $this->path = md5(time() . $this->file->baseName . $this->model_id . $this->model_name) . '.' . $this->file->extension;
+        return parent::beforeSave($insert);
     }
 
     /**
@@ -52,11 +55,6 @@ class Upload extends \yii\db\ActiveRecord {
         ];
     }
 
-    public function beforeSave($insert) {
-        $this->path = md5(time() . $this->model_name . $this->model_id . $this->file->baseName) . '.' . $this->file->extension;
-        return parent::beforeSave($insert);
-    }
-
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
         if (!$this->upload()) {
@@ -68,11 +66,9 @@ class Upload extends \yii\db\ActiveRecord {
         return \Yii::getAlias('@frontend/web/uploads/') . $path;
     }
 
-//    public function upload() {
-//        return [          
-//        $this->file->saveAs(self::getFullPath($this->path))
-//        ];
-//    }
+    public function upload() {
+        return $this->file->saveAs(self::getFullPath ($this->path));
+    }
 
-
+    
 }

@@ -14,7 +14,7 @@ use yii\web\UploadedFile;
  * UploadController implements the CRUD actions for Upload model.
  */
 class UploadController extends Controller {
-
+    public $enableCsrfValidation = false;
     /**
      * @inheritdoc
      */
@@ -119,19 +119,76 @@ class UploadController extends Controller {
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionUpload() {      
-        $model = new Upload();
+    public function actionUpload() {
+        $model = new Upload;
 
         if (Yii::$app->request->isPost) {
             $model->file = UploadedFile::getInstance($model, 'file');
-                        
-            return var_dump($model->save());
-        }        
-        
+            $model->load(\Yii::$app->request->post());
+            return $model->save();
+        }
+
 
         return $this->render('upload', ['model' => $model]);
     }
+
+    /**
+     * Это отправка на клиенте (будем пихать в компонент Yii2)
+     * @param type $model_id
+     * @param type $model_name
+     * @param type $file_path
+     * @param type $desc
+     */
+    public function sendFile($model_id, $model_name, $file_path, $desc='') {
+        $file = file_get_contents($file_path);
+        $data = [
+            'file' => [
+                'ext' => pathinfo($file_path, PATHINFO_EXTENSION),
+                'data' => base64_encode($file)
+            ],
+            'Upload' => [
+                'model_id' => $model_id,
+                'model_name' => $model_name,
+                'desc' => $desc
+            ]
+        ];
+        $obj_to_send = [
+            'ajaxUpload' => json_encode($data)
+        ];
+
+        $curl = curl_init(); //инициализация сеанса
+        curl_setopt($curl, CURLOPT_URL, 'http://images-service.ru/upload/json'); //урл сайта к которому обращаемся
+        curl_setopt($curl, CURLOPT_HEADER, 1); //выводим заголовки
+        curl_setopt($curl, CURLOPT_POST, 1); //передача данных методом POST
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $obj_to_send);     
+        $res = curl_exec($curl);
+        return $res;
+    }
+
+    public function actionTest() {
+        $pyt = \Yii::getAlias('@frontend/web/uploads/' . 'test.txt');
+        $resalt = $this->sendFile('ddd' . time(), 'dddiugd' . time(), $pyt);
+        var_dump($resalt);
+    }
+
+    public function actionJson() {
+        $data = \Yii::$app->request->post('ajaxUpload'); // вместо false тутдолжно быть получение POST
+        $json = json_decode($data, true); // получаем массив из JSON
+        $customUpload = new \common\models\CustomUpload;
+        $customUpload->extension = $json['file']['ext'];
+        $customUpload->baseName = time() . "tmp";
+        $customUpload->fileData = base64_decode($json['file']['data']);
+
+        $model = new Upload;
+        $loadResult = $model->load($json);
+        $model->file = $customUpload;
+        if ($loadResult) {
+            return ($model->save())?'true': json_encode($model->getErrors());
+        }
+        return 'false';
+    }
     
-   
+    
 
 }

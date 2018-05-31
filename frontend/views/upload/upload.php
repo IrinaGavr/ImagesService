@@ -1,11 +1,15 @@
 <?php
+
 use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
 
-    <?= $form->field($model, 'file')->fileInput() ?>
+<?= $form->field($model, 'file')->fileInput() ?>
+<?= $form->field($model, 'model_name')->hint('Заполните имя модели') ?>
+<?= $form->field($model, 'model_id')->hint('Заполните id') ?>
+<?= $form->field($model, 'desc')->hint('Заполните инфу о файле') ?>
 
-    <button>Submit</button>
+<button>Submit</button>
 
 <?php ActiveForm::end() ?>
