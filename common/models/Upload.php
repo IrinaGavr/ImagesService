@@ -71,7 +71,7 @@ class Upload extends \yii\db\ActiveRecord {
     }
 
     public function getById() {
-        return $this->model_id;
+        return $put->$this->path.$this->path;
         
     }
 

@@ -190,11 +190,11 @@ class UploadController extends Controller {
     }
     
     public function actionGet(){
-        $models = new Upload();
-        echo '<pre>';
-        var_dump($models);
-        echo '</pre>';
-        return $models->getById();
+        $modelGetId = new Upload();
+//        echo '<pre>';
+//        var_dump($models);
+//        echo '</pre>';
+        return var_dump($modelGetId->getById());
         
     }
 
