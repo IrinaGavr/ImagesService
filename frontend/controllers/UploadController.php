@@ -14,7 +14,9 @@ use yii\web\UploadedFile;
  * UploadController implements the CRUD actions for Upload model.
  */
 class UploadController extends Controller {
+
     public $enableCsrfValidation = false;
+
     /**
      * @inheritdoc
      */
@@ -139,7 +141,7 @@ class UploadController extends Controller {
      * @param type $file_path
      * @param type $desc
      */
-    public function sendFile($model_id, $model_name, $file_path, $desc='') {
+    public function sendFile($model_id, $model_name, $file_path, $desc = '') {
         $file = file_get_contents($file_path);
         $data = [
             'file' => [
@@ -161,7 +163,7 @@ class UploadController extends Controller {
         curl_setopt($curl, CURLOPT_HEADER, 1); //выводим заголовки
         curl_setopt($curl, CURLOPT_POST, 1); //передача данных методом POST
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $obj_to_send);     
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $obj_to_send);
         $res = curl_exec($curl);
         return $res;
     }
@@ -169,7 +171,7 @@ class UploadController extends Controller {
     public function actionTest() {
         $pyt = \Yii::getAlias('@frontend/web/uploads/' . 'test.txt');
         $resalt = $this->sendFile('ddd' . time(), 'dddiugd' . time(), $pyt);
-        var_dump($resalt);
+//        var_dump($resalt);
     }
 
     public function actionJson() {
@@ -184,17 +186,12 @@ class UploadController extends Controller {
         $loadResult = $model->load($json);
         $model->file = $customUpload;
         if ($loadResult) {
-            return ($model->save())?'true': json_encode($model->getErrors());
+            return ($model->save()) ? 'true' : json_encode($model->getErrors());
         }
         return 'false';
     }
-    
-    public function actionGet(){
-        $modelGetId = new Upload();
-//        echo '<pre>';
-//        var_dump($models);
-//        echo '</pre>';
-        return var_dump($modelGetId->getById());
+
+    public function actionDownload() {
         
     }
 

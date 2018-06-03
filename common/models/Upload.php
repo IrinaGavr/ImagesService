@@ -70,9 +70,8 @@ class Upload extends \yii\db\ActiveRecord {
         return $this->file->saveAs(self::getFullPath($this->path));
     }
 
-    public function getById() {
-        return $put->$this->path.$this->path;
-        
+    public function getImage() {
+        return $image = '/uploads/' . $this->path;
     }
 
 }
