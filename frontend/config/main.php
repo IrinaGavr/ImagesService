@@ -38,6 +38,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                "/get/id/<id:.+>"=>"upload/download-by-id",
+                "/get/model/<id:.+>/<name:.+>"=>"upload/download-by-model"
             ],
         ],
     ],

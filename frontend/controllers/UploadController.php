@@ -191,8 +191,28 @@ class UploadController extends Controller {
         return 'false';
     }
 
-    public function actionDownload() {
-        
+    public function actionDownloadById($id) {
+        $model = Upload::find()->andWhere(['id' => $id])->one();
+        if ($model) {
+            return 'http://images-service.ru' . $model->Image;
+        }
+        return FALSE;
+    }
+
+    public function actionDownloadByModel($id, $name) {
+        $model = Upload::find()->Where(['model_id' => $id])->andWhere(['model_name' => $name])->all();
+
+        $resalt = [];
+        foreach ($model as $_model) {
+            if($_model instanceof Upload){
+                $resalt[] = 'http://images-service.ru' . $_model->Image;
+            }
+        }
+
+        if (!empty($resalt)) {
+            return json_encode($resalt, JSON_PRETTY_PRINT);
+        }
+        return FALSE;
     }
 
 }

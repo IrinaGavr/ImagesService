@@ -32,6 +32,16 @@ DetailView::widget([
     'model' => $model,
     'attributes' => [
         'id',
+        [
+            'label'=>'file',
+            'format'=>'html',
+            'value'=>function($model){
+                if(exif_imagetype(common\models\Upload::getFullPath($model->path))){
+                    return '<img class="img-responsive" src="'.$model->Image.'">';
+                }
+                return "<a href=\"{$model->Image}\" target=\"_blank\">{$model->Image}</a>";
+            }
+        ],
         'path',
         'model_name',
         'model_id',
@@ -39,13 +49,6 @@ DetailView::widget([
     ],
 ])
 ?>
-
-
-<?php if (strpbrk($model->model_name, '.jpg')) : ?>
-    <img class="img-responsive" src="<?= $model->Image ?>">
-<?php else : ?>
-    <a href="<?= $model->Image ?>"><?= $model->model_name ?></a>
-<?php endif; ?>
 
 
 
