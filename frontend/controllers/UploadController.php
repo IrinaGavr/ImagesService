@@ -84,7 +84,7 @@ class UploadController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file') && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -128,10 +128,12 @@ class UploadController extends Controller {
             $model->file = UploadedFile::getInstance($model, 'file');
             $model->load(\Yii::$app->request->post());
             return $model->save();
+            
         }
 
-
         return $this->render('upload', ['model' => $model]);
+  
+        
     }
 
     /**

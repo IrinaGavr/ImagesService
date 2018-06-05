@@ -37,7 +37,6 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Админка', 'url' => ['/upload']],
-        ['label' => 'Загрузить картинку', 'url' => ['/upload/upload']],
         ['label' => 'Потестить', 'url' => ['/upload/test']],
     ];
 //    if (Yii::$app->user->isGuest) {
