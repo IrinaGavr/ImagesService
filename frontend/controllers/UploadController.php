@@ -84,14 +84,37 @@ class UploadController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file') && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file') || $model->save()) {
+
+            if ($model->validate()) {
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return json_encode($model->getErrors());
+            }
         }
 
         return $this->render('update', [
                     'model' => $model,
         ]);
     }
+
+//    public function actionUpdate($id, $path, $model_name, $model_id) {
+//        $model = Update::findOne(['id' => $id]);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file')) {
+//            return $this->redirect(['view', 'id' => $model->id] && $model->save());
+//            
+//            $model->path = $path;
+//            $model->model_name = $model_name;
+//            $model->model_id = $model_id;
+//            $model->save();
+//            //return $model;
+//        }
+//        return $this->render('update', [
+//                    'model' => $model,
+//        ]);
+//    }
 
     /**
      * Deletes an existing Upload model.
@@ -124,16 +147,15 @@ class UploadController extends Controller {
     public function actionUpload() {
         $model = new Upload;
 
+
         if (Yii::$app->request->isPost) {
+
             $model->file = UploadedFile::getInstance($model, 'file');
             $model->load(\Yii::$app->request->post());
             return $model->save();
-            
         }
 
         return $this->render('upload', ['model' => $model]);
-  
-        
     }
 
     /**
@@ -206,7 +228,7 @@ class UploadController extends Controller {
 
         $resalt = [];
         foreach ($model as $_model) {
-            if($_model instanceof Upload){
+            if ($_model instanceof Upload) {
                 $resalt[] = 'http://images-service.ru' . $_model->Image;
             }
         }

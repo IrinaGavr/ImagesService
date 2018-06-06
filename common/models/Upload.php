@@ -30,10 +30,10 @@ class Upload extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['model_name', 'model_id'], 'required'],
-            [['desc'], 'string'],
-            [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
-            [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']]
+                [['model_name', 'model_id'], 'required'],
+                [['desc'], 'string'],
+                [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
+                [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']]
         ];
     }
 
@@ -60,6 +60,7 @@ class Upload extends \yii\db\ActiveRecord {
         if (!$this->upload()) {
             $this->delete();
         }
+        Yii::$app->session->setFlash('success', 'Запись сохранена');
     }
 
     public static function getFullPath($path) {

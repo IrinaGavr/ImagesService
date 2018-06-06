@@ -12,4 +12,15 @@ use yii\widgets\ActiveForm;
 
 <button>Submit</button>
 
+<?php echo Yii::$app->session->getFlash('success'); ?>
+
+
+    <?php
+    echo "<PRE>";
+    var_dump($model->GetAttributes());
+    var_dump($model->getErrors());
+    var_dump($model->validate());
+    echo "</PRE>";
+    ?>
+
 <?php ActiveForm::end() ?>
