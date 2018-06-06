@@ -33,11 +33,11 @@ DetailView::widget([
     'attributes' => [
         'id',
         [
-            'label'=>'file',
-            'format'=>'html',
-            'value'=>function($model){
-                if(exif_imagetype(common\models\Upload::getFullPath($model->path))){
-                    return '<img class="img-responsive" src="'.$model->Image.'">';
+            'label' => 'file',
+            'format' => 'html',
+            'value' => function($model) {
+                if (exif_imagetype(common\models\Upload::getFullPath($model->path))) {
+                    return '<img class="img-responsive" src="' . $model->Image . '">';
                 }
                 return "<a href=\"{$model->Image}\" target=\"_blank\">{$model->Image}</a>";
             }
@@ -48,6 +48,12 @@ DetailView::widget([
         'desc:ntext',
     ],
 ])
+?>
+
+<?php
+echo "<PRE>";
+var_dump($model->path);
+echo "</PRE>";
 ?>
 
 

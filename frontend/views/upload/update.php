@@ -30,9 +30,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?php
     echo "<PRE>";
-    var_dump($model->GetAttributes());
-    var_dump($model->getErrors());
-    var_dump($model->validate());
+    var_dump($model->path);
     echo "</PRE>";
     ?>
 

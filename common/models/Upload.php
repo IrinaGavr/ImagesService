@@ -74,5 +74,11 @@ class Upload extends \yii\db\ActiveRecord {
     public function getImage() {
         return $image = '/uploads/' . $this->path;
     }
+    
+    public function update($runValidation = true, $attributeNames = null) {
+        parent::update($runValidation, $attributeNames);
+       $this-->save();
+    }
+            
 
 }

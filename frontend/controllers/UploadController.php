@@ -83,44 +83,16 @@ class UploadController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-
-<<<<<<< HEAD
-        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file')) {
-            // return $this->redirect(['view', 'id' => $model->id]);
-            $model->save();
-=======
-        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file') || $model->save()) {
-
-            if ($model->validate()) {
-
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return json_encode($model->getErrors());
+        if ($model->load(Yii::$app->request->post())) {
+            if (($model->path)) {
+// вот сюда костыль
             }
->>>>>>> 6591aef9e4c9338c69719ddc0a61c5bdbdac9348
+            $model->update();
         }
-
         return $this->render('update', [
                     'model' => $model,
         ]);
     }
-
-//    public function actionUpdate($id, $path, $model_name, $model_id) {
-//        $model = Update::findOne(['id' => $id]);
-//
-//        if ($model->load(Yii::$app->request->post()) && $model->file = UploadedFile::getInstance($model, 'file')) {
-//            return $this->redirect(['view', 'id' => $model->id] && $model->save());
-//            
-//            $model->path = $path;
-//            $model->model_name = $model_name;
-//            $model->model_id = $model_id;
-//            $model->save();
-//            //return $model;
-//        }
-//        return $this->render('update', [
-//                    'model' => $model,
-//        ]);
-//    }
 
     /**
      * Deletes an existing Upload model.
