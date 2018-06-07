@@ -86,6 +86,11 @@ class UploadController extends Controller {
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
         }
+
+        if ($model->upload()) {
+            // file is uploaded successfully
+            return;
+        }
         return $this->render('update', [
                     'model' => $model,
         ]);
@@ -126,8 +131,6 @@ class UploadController extends Controller {
             $model->load(\Yii::$app->request->post());
             return $model->save();
         }
-
-
         return $this->render('upload', ['model' => $model]);
     }
 
