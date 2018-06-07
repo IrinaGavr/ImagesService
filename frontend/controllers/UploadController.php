@@ -84,10 +84,7 @@ class UploadController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
-            if (($model->path)) {
-// вот сюда костыль
-            }
-            $model->update();
+            $model->save();
         }
         return $this->render('update', [
                     'model' => $model,
@@ -124,14 +121,12 @@ class UploadController extends Controller {
 
     public function actionUpload() {
         $model = new Upload;
-
-
         if (Yii::$app->request->isPost) {
-
             $model->file = UploadedFile::getInstance($model, 'file');
             $model->load(\Yii::$app->request->post());
             return $model->save();
         }
+
 
         return $this->render('upload', ['model' => $model]);
     }

@@ -32,13 +32,16 @@ class Upload extends \yii\db\ActiveRecord {
         return [
                 [['model_name', 'model_id'], 'required'],
                 [['desc'], 'string'],
-                [['path', 'model_name', 'model_id'], 'string', 'max' => 255],
+                [['path', 'model_name', 'model_id'], 'string', 'max' => 255, 'on' => 'insert,update'],
                 [['path', 'model_name', 'model_id'], 'unique', 'targetAttribute' => ['path', 'model_name', 'model_id']]
         ];
     }
 
     public function beforeSave($insert) {
-        $this->path = md5(time() . $this->file->baseName . $this->model_id . $this->model_name) . '.' . $this->file->extension;
+        // set_time_limit(0);
+        if ($this->getIsNewRecord()) {
+            $this->path = md5(time() . $this->file->baseName . $this->model_id . $this->model_name) . '.' . $this->file->extension;
+        }
         return parent::beforeSave($insert);
     }
 
@@ -57,9 +60,9 @@ class Upload extends \yii\db\ActiveRecord {
 
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
-        if (!$this->upload()) {
+        if (!$this->upload() && $this->isNewRecord) {
             $this->delete();
-        }
+        } 
         Yii::$app->session->setFlash('success', 'Запись сохранена');
     }
 
@@ -68,17 +71,14 @@ class Upload extends \yii\db\ActiveRecord {
     }
 
     public function upload() {
-        return $this->file->saveAs(self::getFullPath($this->path));
+
+        if (!empty($this->file) && $this->validate()) {
+            return $this->file->saveAs(self::getFullPath($this->path));
+        } return FALSE;
     }
 
     public function getImage() {
         return $image = '/uploads/' . $this->path;
     }
-    
-    public function update($runValidation = true, $attributeNames = null) {
-        parent::update($runValidation, $attributeNames);
-       $this-->save();
-    }
-            
 
 }
