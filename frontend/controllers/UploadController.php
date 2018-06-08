@@ -129,7 +129,9 @@ class UploadController extends Controller {
         if (Yii::$app->request->isPost) {
             $model->file = UploadedFile::getInstance($model, 'file');
             $model->load(\Yii::$app->request->post());
-            return $model->save();
+            $model->save();
+            
+            return $this->redirect(['upload']);
         }
         return $this->render('upload', ['model' => $model]);
     }
