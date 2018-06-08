@@ -26,12 +26,4 @@ $this->params['breadcrumbs'][] = 'Update';
     ])
     ?>
 
-    <?php echo Yii::$app->session->getFlash('success'); ?>
-
-    <?php
-    echo "<PRE>";
-    var_dump($model->path);
-    echo "</PRE>";
-    ?>
-
 </div>

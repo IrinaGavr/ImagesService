@@ -141,38 +141,37 @@ class UploadController extends Controller {
      * @param type $file_path
      * @param type $desc
      */
-    public function sendFile($model_id, $model_name, $file_path, $desc = '') {
-        $file = file_get_contents($file_path);
-        $data = [
-            'file' => [
-                'ext' => pathinfo($file_path, PATHINFO_EXTENSION),
-                'data' => base64_encode($file)
-            ],
-            'Upload' => [
-                'model_id' => $model_id,
-                'model_name' => $model_name,
-                'desc' => $desc
-            ]
-        ];
-        $obj_to_send = [
-            'ajaxUpload' => json_encode($data)
-        ];
-
-        $curl = curl_init(); //инициализация сеанса
-        curl_setopt($curl, CURLOPT_URL, 'http://images-service.ru/upload/json'); //урл сайта к которому обращаемся
-        curl_setopt($curl, CURLOPT_HEADER, 1); //выводим заголовки
-        curl_setopt($curl, CURLOPT_POST, 1); //передача данных методом POST
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $obj_to_send);
-        $res = curl_exec($curl);
-        return $res;
-    }
-
-    public function actionTest() {
-        $pyt = \Yii::getAlias('@frontend/web/uploads/' . 'test.txt');
-        $resalt = $this->sendFile('ddd' . time(), 'dddiugd' . time(), $pyt);
-//        var_dump($resalt);
-    }
+//    public function sendFile($model_id, $model_name, $file_path, $desc = '') {
+//        $file = file_get_contents($file_path);
+//        $data = [
+//            'file' => [
+//                'ext' => pathinfo($file_path, PATHINFO_EXTENSION),
+//                'data' => base64_encode($file)
+//            ],
+//            'Upload' => [
+//                'model_id' => $model_id,
+//                'model_name' => $model_name,
+//                'desc' => $desc
+//            ]
+//        ];
+//        $obj_to_send = [
+//            'ajaxUpload' => json_encode($data)
+//        ];
+//
+//        $curl = curl_init(); //инициализация сеанса
+//        curl_setopt($curl, CURLOPT_URL, 'http://images-service.ru/upload/json'); //урл сайта к которому обращаемся
+//        curl_setopt($curl, CURLOPT_HEADER, 1); //выводим заголовки
+//        curl_setopt($curl, CURLOPT_POST, 1); //передача данных методом POST
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
+//        curl_setopt($curl, CURLOPT_POSTFIELDS, $obj_to_send);
+//        $res = curl_exec($curl);
+//        return $res;
+//    }
+//
+//    public function actionTest() {
+//        $pyt = \Yii::getAlias('@frontend/web/uploads/' . 'test.txt');
+//        $resalt = $this->sendFile('ddd' . time(), 'dddiugd' . time(), $pyt);
+//    }
 
     public function actionJson() {
         $data = \Yii::$app->request->post('ajaxUpload'); // вместо false тутдолжно быть получение POST
@@ -193,6 +192,7 @@ class UploadController extends Controller {
 
     public function actionDownloadById($id) {
         $model = Upload::find()->andWhere(['id' => $id])->one();
+
         if ($model) {
             return 'http://images-service.ru' . $model->Image;
         }
@@ -213,6 +213,24 @@ class UploadController extends Controller {
             return json_encode($resalt, JSON_PRETTY_PRINT);
         }
         return FALSE;
+    }
+
+    public function actionTestik1($file_id = 4) {
+        $model = Upload::find()->andWhere(['id' => $file_id])->one();
+
+        if ($model) {
+            var_dump(\Yii::$app->ImageServiceComponent->getFileId(3));
+        }
+    }
+
+    public function actionTestik2($model_id = 4, $model_name = 4) {
+
+        var_dump(json_decode(\Yii::$app->ImageServiceComponent->getModelVallue($model_id, $model_name), TRUE));
+    }
+
+    public function actionTestik3() {
+        $pyt = \Yii::getAlias('@frontend/web/uploads/' . 'test.jpg');
+        return $resalt = \Yii::$app->ImageServiceComponent->sendFile('ddd', 'dddiugd', $pyt, 'djdj');
     }
 
 }

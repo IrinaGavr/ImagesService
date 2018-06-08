@@ -32,12 +32,21 @@ DetailView::widget([
     'model' => $model,
     'attributes' => [
         'id',
-        [
+            [
             'label' => 'file',
             'format' => 'html',
             'value' => function($model) {
-                if (exif_imagetype(common\models\Upload::getFullPath($model->path))) {
-                    return '<img class="img-responsive" src="' . $model->Image . '">';
+//                if (exif_imagetype(common\models\Upload::getFullPath($model->path))) {
+//                    return '<img class="img-responsive" src="' . $model->Image . '">';
+//                }
+//                return "<a href=\"{$model->Image}\" target=\"_blank\">{$model->Image}</a>";
+
+                try {
+                    if (exif_imagetype(common\models\Upload::getFullPath($model->path))) {
+                        return '<img class="img-responsive" src="' . $model->Image . '">';
+                    }
+                } catch (yii\base\ErrorException $e) {
+                    
                 }
                 return "<a href=\"{$model->Image}\" target=\"_blank\">{$model->Image}</a>";
             }
@@ -50,11 +59,6 @@ DetailView::widget([
 ])
 ?>
 
-<?php
-echo "<PRE>";
-var_dump($model->path);
-echo "</PRE>";
-?>
 
 
 
