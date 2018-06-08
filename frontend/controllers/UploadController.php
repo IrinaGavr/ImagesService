@@ -127,12 +127,18 @@ class UploadController extends Controller {
     public function actionUpload() {
         $model = new Upload;
         if (Yii::$app->request->isPost) {
+
             $model->file = UploadedFile::getInstance($model, 'file');
             $model->load(\Yii::$app->request->post());
-            $model->save();
-            
+            if (!empty($model->file)) {
+                $model->save();
+            } else {
+                Yii::$app->session->setFlash('danger', 'Загрузите файл!');
+                return $this->redirect(['upload']);
+            }
             return $this->redirect(['upload']);
         }
+
         return $this->render('upload', ['model' => $model]);
     }
 
