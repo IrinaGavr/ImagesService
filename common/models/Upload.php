@@ -41,8 +41,11 @@ class Upload extends \yii\db\ActiveRecord {
         // set_time_limit(0);
         if ($this->getIsNewRecord()) {
             $this->path = md5(time() . $this->file->baseName . $this->model_id . $this->model_name) . '.' . $this->file->extension;
+        } else {
+             unset($this->path, $this->model_id, $this->model_name);
         }
-        return parent::beforeSave($insert);
+            
+            return parent::beforeSave($insert);
     }
 
     /**
@@ -68,9 +71,8 @@ class Upload extends \yii\db\ActiveRecord {
 
     public function afterDelete() {
         parent::afterDelete();
-            unlink(\Yii::getAlias('@frontend/web/uploads/') . $this->path);
-        }
-    
+        unlink(\Yii::getAlias('@frontend/web/uploads/') . $this->path);
+    }
 
     public static function getFullPath($path) {
         return \Yii::getAlias('@frontend/web/uploads/') . $path;
