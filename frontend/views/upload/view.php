@@ -65,4 +65,3 @@ DetailView::widget([
 
 
 
-
