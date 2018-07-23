@@ -214,8 +214,7 @@ class UploadController extends Controller {
         $resalt = [];
         foreach ($model as $_model) {
             if ($_model instanceof Upload) {
-                $resalt['url'] = 'http://images-service.ru' . $_model->Image;
-                $resalt['desc'] = $_model->desc;
+                $resalt[] = array('url' => 'http://images-service.ru' . $_model->Image, 'desc' => $_model->desc);
             }
         }
 
