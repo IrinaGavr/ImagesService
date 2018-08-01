@@ -209,22 +209,26 @@ class UploadController extends Controller {
     }
 
     public function actionDownloadByModel($id, $name) {
+                    
         $model = Upload::find()->Where(['model_id' => $id])->andWhere(['model_name' => $name])->all();
 
-        $resalt = [];
+        $resalt = [
+            'status'=>false,
+            'result'=>[]
+        ];
         foreach ($model as $_model) {
             if ($_model instanceof Upload) {
-                $resalt[] = array('url' => 'http://images-service.ru' . $_model->Image, 'desc' => $_model->desc);
+                $resalt['result'][] = array('url' => 'http://images-service.ru' . $_model->Image, 'desc' => json_decode($_model->desc, true));
             }
         }
 
-        if (!empty($resalt)) {
-            return json_encode($resalt, JSON_PRETTY_PRINT);
+        if (!empty($resalt['result'])) {
+            $resalt['status']=true;
         }
-        return FALSE;
+        return json_encode($resalt, JSON_PRETTY_PRINT);
     }
 
-    public function actionTestik1($file_id = 4) {
+    public function actionTestik1($file_id = 8601) {
         $model = Upload::find()->andWhere(['id' => $file_id])->one();
 
         if ($model) {
@@ -232,7 +236,7 @@ class UploadController extends Controller {
         }
     }
 
-    public function actionTestik2($model_id = 4, $model_name = 4) {
+    public function actionTestik2() {
 
         var_dump(json_decode(\Yii::$app->ImageServiceComponent->getModelVallue($model_id, $model_name), TRUE));
     }
